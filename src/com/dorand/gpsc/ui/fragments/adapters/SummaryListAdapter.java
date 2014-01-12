@@ -18,7 +18,8 @@ public class SummaryListAdapter extends ArrayAdapter<Pair<String, String>> {
 	private Activity activity;
 	private IGPSummaryListDelegate delegate;
 
-	public SummaryListAdapter(Activity context, int resource, IGPSummaryListDelegate _delegate) {
+	public SummaryListAdapter(Activity context, int resource,
+			IGPSummaryListDelegate _delegate) {
 		super(context, resource);
 		activity = context;
 		delegate = _delegate;
@@ -29,6 +30,11 @@ public class SummaryListAdapter extends ArrayAdapter<Pair<String, String>> {
 		// Last element is (currently) garbage...
 		int ret = delegate.getSummaryList().size();
 		return ret == 0 ? ret : ret - 1;
+	}
+
+	@Override
+	public boolean isEnabled(int position) {
+		return false;
 	}
 
 	@Override
@@ -48,7 +54,8 @@ public class SummaryListAdapter extends ArrayAdapter<Pair<String, String>> {
 			TextView nameView = (TextView) view.findViewById(R.id.summaryName);
 			nameView.setText(entry.getName());
 
-			TextView valueView = (TextView) view.findViewById(R.id.summaryValue);
+			TextView valueView = (TextView) view
+					.findViewById(R.id.summaryValue);
 			valueView.setText(entry.getValue());
 		}
 		return view;
@@ -64,7 +71,8 @@ public class SummaryListAdapter extends ArrayAdapter<Pair<String, String>> {
 			TextView nameView = (TextView) view.findViewById(R.id.summaryName);
 			nameView.setWidth(Double.valueOf(width * 0.6).intValue());
 
-			TextView valueView = (TextView) view.findViewById(R.id.summaryValue);
+			TextView valueView = (TextView) view
+					.findViewById(R.id.summaryValue);
 			valueView.setWidth(Double.valueOf(width * 0.4).intValue());
 		} else {
 			view = convertView;

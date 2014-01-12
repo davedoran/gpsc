@@ -18,6 +18,7 @@
 
     <!-- Settings Menu -->
     <string name="ncc_link">NCC Website</string>
+    <string name="weather_link">Weather</string>
     <string name="about_app">About</string>
 
     <!-- Errors -->
@@ -28,5 +29,8 @@
     <string name="title_activity_about">About</string>
     <string name="about_text">All data provided courtesy of the NCC.</string>
     <string name="about_copyright">Copyright 2014, Dave Doran</string>
+    <string name="title_activity_weather">WeatherActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
