@@ -6,11 +6,11 @@
         android:showAsAction="never"
         android:title="@string/ncc_link"/>
     
-    <item
+<!--<item
         android:id="@+id/weather_link"
         android:orderInCategory="200"
         android:showAsAction="never"
-        android:title="@string/weather_link"/>
+        android:title="@string/weather_link"/> -->
     
     <item
         android:id="@+id/about_link"

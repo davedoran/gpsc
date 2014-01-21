@@ -13,14 +13,23 @@
         android:id="@+id/about_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/about_text" />
+        android:padding="5dp"
+        android:text="@string/about_data" />
+
+    <TextView
+        android:id="@+id/about_disclaimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="@string/about_disclaimer" />
 
     <TextView
         android:id="@+id/about_copyright"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="bottom|right"
+        android:layout_height="fill_parent"
         android:layout_gravity="bottom"
+        android:gravity="bottom|right"
+        android:padding="5dp"
         android:text="@string/about_copyright" />
 
 </LinearLayout>
