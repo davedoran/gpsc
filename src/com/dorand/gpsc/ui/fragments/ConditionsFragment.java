@@ -16,6 +16,7 @@ import com.dorand.gpsc.service.http.intf.IGPSummaryResponseHandler;
 import com.dorand.gpsc.service.intf.IGPError;
 import com.dorand.gpsc.service.intf.IGPSummaryEntry;
 import com.dorand.gpsc.service.intf.IGPSummaryListDelegate;
+import com.dorand.gpsc.ui.GPToaster;
 import com.dorand.gpsc.ui.R;
 import com.dorand.gpsc.ui.fragments.adapters.SummaryListAdapter;
 
@@ -42,17 +43,8 @@ public class ConditionsFragment extends ListFragment implements IGPSummaryListDe
 		
 		@Override
 		public void onCachedResponse(IGPSummaryResponse response) {
-			synchronized (summaryInfo) {
-				summaryInfo.clear();
-				summaryInfo.addAll(response.getSummaryInfo());
-			}
-			Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
-			getActivity().runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					mListAdapter.notifyDataSetChanged();
-				}
-			});
+			onResponse(response);
+			GPToaster.toast(getActivity(), R.string.stale_data, Toast.LENGTH_LONG);
 		}
 
 		@Override

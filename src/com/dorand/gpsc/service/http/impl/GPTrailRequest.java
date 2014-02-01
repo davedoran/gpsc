@@ -24,6 +24,11 @@ public class GPTrailRequest extends GPJSONRequest {
 	protected void onResponse(JSONObject response) {
 		mResponseHandler.onResponse(new GPTrailConditionsResponse(response));
 	}
+	
+	@Override
+	protected void onCachedResponse(JSONObject cachedResponse) {
+		mResponseHandler.onCachedResponse(new GPTrailConditionsResponse(cachedResponse));
+	}	
 
 	@Override
 	protected void onError(IGPError err) {

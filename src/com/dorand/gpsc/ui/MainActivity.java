@@ -2,6 +2,8 @@ package com.dorand.gpsc.ui;
 
 import java.util.Locale;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,13 +27,21 @@ public class MainActivity extends FragmentActivity {
 
 	private ViewPager mViewPager;
 
+	public static String ROOT_DIR;
+	public static Activity MAIN_ACTIVITY;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		if (ROOT_DIR == null) {
+			ROOT_DIR = getDir("gpsc", Context.MODE_PRIVATE).toString();
+		}
+		MAIN_ACTIVITY = this;
+
 		setContentView(R.layout.activity_main);
 
-		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getSupportFragmentManager());
+		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -69,7 +79,7 @@ public class MainActivity extends FragmentActivity {
 			Log.e(getClass().getName(), "Unable to launch NCC", e);
 		}
 	}
-	
+
 	private void launchWeatherActivity() {
 		Intent intent = new Intent();
 		intent.setClass(this, WeatherActivity.class);

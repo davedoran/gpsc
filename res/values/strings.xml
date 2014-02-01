@@ -39,7 +39,7 @@
     <string name="wakefield_weather">Wakefield</string>
 
     <!-- Toast -->
-    <string name="no_connection">Failed to fetch latest conditions.</string>
+    <string name="stale_data">The server is unreachable; Displaying last known conditions &#8230;</string>
     
     <!-- Stubs... tb removed -->
     <string name="temp_stub">-5C</string>

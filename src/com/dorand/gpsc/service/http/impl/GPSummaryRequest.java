@@ -24,6 +24,11 @@ public class GPSummaryRequest extends GPJSONRequest {
 	}
 
 	@Override
+	protected void onCachedResponse(JSONObject cachedResponse) {
+		mResponseHandler.onCachedResponse(new GPSummaryConditionsResponse(cachedResponse));
+	}
+
+	@Override
 	protected void onError(IGPError err) {
 		mResponseHandler.onError(err);
 	}

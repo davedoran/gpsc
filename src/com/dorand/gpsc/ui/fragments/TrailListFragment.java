@@ -9,12 +9,15 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.dorand.gpsc.service.http.intf.IGPTrailConditionsResponse;
 import com.dorand.gpsc.service.http.intf.IGPTrailResponseHandler;
+import com.dorand.gpsc.service.impl.GPTrailConditionsResponse;
 import com.dorand.gpsc.service.intf.IGPError;
 import com.dorand.gpsc.service.intf.IGPTrailListDelegate;
 import com.dorand.gpsc.service.intf.IGPTrailStatus;
+import com.dorand.gpsc.ui.GPToaster;
 import com.dorand.gpsc.ui.R;
 import com.dorand.gpsc.ui.fragments.adapters.TrailListAdapter;
 
@@ -74,6 +77,12 @@ public abstract class TrailListFragment extends ListFragment implements IGPTrail
 					mTrailListAdapter.notifyDataSetChanged();
 				}
 			});
+		}
+
+		@Override
+		public void onCachedResponse(GPTrailConditionsResponse response) {
+			onResponse(response);
+			GPToaster.toast(getActivity(), R.string.stale_data, Toast.LENGTH_LONG);
 		}
 
 	};

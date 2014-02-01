@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,8 +15,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-
-import android.util.Base64;
 
 import com.dorand.gpsc.service.cache.impl.GPFileSystemCache;
 import com.dorand.gpsc.service.http.intf.IGPCachedResponse;
@@ -85,31 +85,22 @@ public abstract class GPJSONRequest implements Runnable {
 						onError(new GPError(getClass().getName(), "Failed to parse JSON response..."));
 					}
 				} else {
-					noEntity();
+					serveCachedResponseIfAvailable(new GPError(getClass().getName(), "Entity not found..."));
 				}
 			} else {
-				badResponseCode(response);
+				serveCachedResponseIfAvailable(new GPError(getClass().getName(), "Response code: " + response.getStatusLine().getStatusCode()));
 			}
 		} catch (IOException e) {
-			onError(new GPError(getClass().getName(), e.getMessage()));
+			serveCachedResponseIfAvailable(new GPError(getClass().getName(), e.getMessage()));
 		}
 	}
 
-	private void noEntity() {
+	private void serveCachedResponseIfAvailable(GPError err) {
 		JSONObject fromCache = loadFromFileSystem();
 		if (fromCache != null) {
-			onResponse(fromCache);
+			onCachedResponse(fromCache);
 		} else {
-			onError(new GPError(getClass().getName(), "Entity not found..."));
-		}
-	}
-
-	private void badResponseCode(HttpResponse response) {
-		JSONObject fromCache = loadFromFileSystem();
-		if (fromCache != null) {
-			onResponse(fromCache);
-		} else {
-			onError(new GPError(getClass().getName(), "Response code: " + response.getStatusLine().getStatusCode()));
+			onError(err);
 		}
 	}
 
@@ -117,14 +108,16 @@ public abstract class GPJSONRequest implements Runnable {
 
 	protected abstract void onResponse(JSONObject response);
 
+	protected abstract void onCachedResponse(JSONObject cachedResponse);
+
 	protected abstract void onError(IGPError err);
 
 	protected void cacheToFileSystem(JSONObject response) {
-		GPFileSystemCache.cacheResponse(Base64.encodeToString(mUrl.getBytes(), 0), response);
+		GPFileSystemCache.cacheResponse(genCacheKey(), response);
 	}
 
 	protected JSONObject loadFromFileSystem() {
-		return GPFileSystemCache.loadFromCache(Base64.encodeToString(mUrl.getBytes(), 0));
+		return GPFileSystemCache.loadFromCache(genCacheKey());
 	}
 
 	private static String convertStreamToString(InputStream is) {
@@ -147,6 +140,32 @@ public abstract class GPJSONRequest implements Runnable {
 			}
 		}
 		return sb.toString();
+	}
+
+	private String genCacheKey() {
+		String ret = "";
+		final String MD5 = "MD5";
+		try {
+			// Create MD5 Hash
+			MessageDigest digest = java.security.MessageDigest.getInstance(MD5);
+
+			digest.update(mUrl.toString().getBytes());
+			byte messageDigest[] = digest.digest();
+
+			// Create Hex String
+			StringBuilder hexString = new StringBuilder();
+			for (byte aMessageDigest : messageDigest) {
+				String h = Integer.toHexString(0xFF & aMessageDigest);
+				while (h.length() < 2)
+					h = "0" + h;
+				hexString.append(h);
+			}
+			ret = hexString.toString();
+
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return ret;
 	}
 
 }

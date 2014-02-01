@@ -10,7 +10,7 @@ import com.ibm.json.java.JSONObject;
 public class GPWeatherRequest extends GPJSONRequest {
 
 	private IGPWeatherResponseHandler mResponseHandler;
-	
+
 	public GPWeatherRequest(String url, boolean b, IGPWeatherResponseHandler _handler) {
 		super(url, b);
 		mResponseHandler = _handler;
@@ -21,7 +21,7 @@ public class GPWeatherRequest extends GPJSONRequest {
 		JSONObject ret = null;
 		IGPError err = new GPError(getClass().getName());
 		ret = GPJSONUtils.parse(result.getBytes(), err);
-		if ( err.isError() ) {
+		if (err.isError()) {
 			ret = null;
 		}
 		return ret;
@@ -35,6 +35,11 @@ public class GPWeatherRequest extends GPJSONRequest {
 	@Override
 	protected void onError(IGPError err) {
 		mResponseHandler.onError(err);
+	}
+
+	@Override
+	protected void onCachedResponse(JSONObject cachedResponse) {
+		mResponseHandler.onCachedResponse(new GPWeatherResponse(cachedResponse));
 	}
 
 }

@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.util.Log;
+
 import com.dorand.gpsc.service.intf.IGPError;
 import com.ibm.json.java.JSON;
 import com.ibm.json.java.JSONArray;
@@ -86,8 +88,11 @@ public class GPJSONUtils {
 				if (file.exists()) {
 					file.delete();
 				}
+				String filePath = file.getAbsolutePath();
+				Log.i("GPJSONUtils", filePath);
 				FileWriter fw = null;
 				try {
+					file.createNewFile();					
 					fw = new FileWriter(file);
 					fw.write(new String(data));
 				} catch ( IOException ex ) {
