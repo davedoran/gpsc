@@ -38,6 +38,9 @@
     <string name="chelsea_weather">Old Chelsea</string>
     <string name="wakefield_weather">Wakefield</string>
 
+    <!-- Toast -->
+    <string name="no_connection">Failed to fetch latest conditions.</string>
+    
     <!-- Stubs... tb removed -->
     <string name="temp_stub">-5C</string>
     <string name="wind_stub">5kp/h SW</string>

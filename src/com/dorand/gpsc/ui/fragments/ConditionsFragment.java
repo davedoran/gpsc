@@ -8,6 +8,7 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.dorand.gpsc.service.http.impl.GPHttpService;
 import com.dorand.gpsc.service.http.intf.IGPSummaryResponse;
@@ -31,6 +32,21 @@ public class ConditionsFragment extends ListFragment implements IGPSummaryListDe
 				summaryInfo.clear();
 				summaryInfo.addAll(response.getSummaryInfo());
 			}
+			getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					mListAdapter.notifyDataSetChanged();
+				}
+			});
+		}
+		
+		@Override
+		public void onCachedResponse(IGPSummaryResponse response) {
+			synchronized (summaryInfo) {
+				summaryInfo.clear();
+				summaryInfo.addAll(response.getSummaryInfo());
+			}
+			Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
 			getActivity().runOnUiThread(new Runnable() {
 				@Override
 				public void run() {

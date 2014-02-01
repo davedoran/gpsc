@@ -6,6 +6,7 @@ import com.dorand.gpsc.service.intf.IGPError;
 public interface IGPSummaryResponseHandler {
 
 	void onResponse(IGPSummaryResponse response);
+	void onCachedResponse(IGPSummaryResponse response);
 	void onError(IGPError gpError);
 
 }

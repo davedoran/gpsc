@@ -14,6 +14,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.util.Base64;
+
+import com.dorand.gpsc.service.cache.impl.GPFileSystemCache;
 import com.dorand.gpsc.service.http.intf.IGPCachedResponse;
 import com.dorand.gpsc.service.intf.IGPError;
 import com.dorand.gpsc.service.util.GPError;
@@ -73,6 +76,7 @@ public abstract class GPJSONRequest implements Runnable {
 					instream.close();
 					JSONObject resultJSON = sanitizeResponse(result);
 					if (resultJSON != null) {
+						cacheToFileSystem(resultJSON);
 						onResponse(resultJSON);
 						synchronized (CACHE) {
 							CACHE.put(mUrl, new GPCachedResponse(resultJSON));
@@ -80,13 +84,32 @@ public abstract class GPJSONRequest implements Runnable {
 					} else {
 						onError(new GPError(getClass().getName(), "Failed to parse JSON response..."));
 					}
-				} else
-					onError(new GPError(getClass().getName(), "Entity not found..."));
+				} else {
+					noEntity();
+				}
 			} else {
-				onError(new GPError(getClass().getName(), "Response code: " + response.getStatusLine().getStatusCode()));
+				badResponseCode(response);
 			}
 		} catch (IOException e) {
 			onError(new GPError(getClass().getName(), e.getMessage()));
+		}
+	}
+
+	private void noEntity() {
+		JSONObject fromCache = loadFromFileSystem();
+		if (fromCache != null) {
+			onResponse(fromCache);
+		} else {
+			onError(new GPError(getClass().getName(), "Entity not found..."));
+		}
+	}
+
+	private void badResponseCode(HttpResponse response) {
+		JSONObject fromCache = loadFromFileSystem();
+		if (fromCache != null) {
+			onResponse(fromCache);
+		} else {
+			onError(new GPError(getClass().getName(), "Response code: " + response.getStatusLine().getStatusCode()));
 		}
 	}
 
@@ -95,6 +118,14 @@ public abstract class GPJSONRequest implements Runnable {
 	protected abstract void onResponse(JSONObject response);
 
 	protected abstract void onError(IGPError err);
+
+	protected void cacheToFileSystem(JSONObject response) {
+		GPFileSystemCache.cacheResponse(Base64.encodeToString(mUrl.getBytes(), 0), response);
+	}
+
+	protected JSONObject loadFromFileSystem() {
+		return GPFileSystemCache.loadFromCache(Base64.encodeToString(mUrl.getBytes(), 0));
+	}
 
 	private static String convertStreamToString(InputStream is) {
 
