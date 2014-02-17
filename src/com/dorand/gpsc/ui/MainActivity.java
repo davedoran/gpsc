@@ -60,9 +60,6 @@ public class MainActivity extends FragmentActivity {
 		if (title.equals(getString(R.string.ncc_link))) {
 			Log.d(getClass().getName(), "NCC Link Clicked!");
 			launchNCCWebSite();
-		} else if (title.equals(getString(R.string.weather_link))) {
-			Log.d(getClass().getName(), "Weather Link Clicked!");
-			launchWeatherActivity();
 		} else if (title.equals(getString(R.string.about_app))) {
 			Log.d(getClass().getName(), "About Link Clicked!");
 			launchAboutActivity();
@@ -78,12 +75,6 @@ public class MainActivity extends FragmentActivity {
 		} catch (Exception e) {
 			Log.e(getClass().getName(), "Unable to launch NCC", e);
 		}
-	}
-
-	private void launchWeatherActivity() {
-		Intent intent = new Intent();
-		intent.setClass(this, WeatherActivity.class);
-		startActivity(intent);
 	}
 
 	private void launchAboutActivity() {

@@ -5,7 +5,6 @@ import java.util.concurrent.Executors;
 
 import com.dorand.gpsc.service.http.intf.IGPSummaryResponseHandler;
 import com.dorand.gpsc.service.http.intf.IGPTrailResponseHandler;
-import com.dorand.gpsc.service.http.intf.IGPWeatherResponseHandler;
 
 public class GPHttpService {
 
@@ -13,10 +12,6 @@ public class GPHttpService {
 	private static final String CLASSIC_URL = "https://spreadsheets.google.com/tq?key=0AqeNjAYIAcUedGl0SWVZZzNtQ0JNTVFuR1dRQ3psMlE&pub=1&gid=0&tq=SELECT%20B%2CE%2CC%2CF%20%20WHERE%20E%20%3C%3E%20%22%22%20AND%20G%20LIKE%20%22classique%25%22%20ORDER%20BY%20A&tqx=reqId%3A2";
 	private static final String SKATE_URL = "https://spreadsheets.google.com/tq?key=0AqeNjAYIAcUedGl0SWVZZzNtQ0JNTVFuR1dRQ3psMlE&pub=1&gid=0&tq=SELECT%20B%2CE%2CC%2CF%20%20WHERE%20E%20%3C%3E%20%22%22%20AND%20G%20LIKE%20%22%25patin%22%20ORDER%20BY%20A&tqx=reqId%3A3";
 	private static final String BACKCOUNTRY_URL = "https://spreadsheets.google.com/tq?key=0AqeNjAYIAcUedGl0SWVZZzNtQ0JNTVFuR1dRQ3psMlE&pub=1&gid=0&tq=SELECT%20B%2CE%2CC%2CF%20%20WHERE%20E%20%3C%3E%20%22%22%20AND%20G%20%3D%20%22aucune%20traitement%22%20ORDER%20BY%20A&tqx=reqId%3A4";
-
-	private static final String WEATHER_GATINEAU = "http://api.openweathermap.org/data/2.5/weather?lat=45.44&lon=-75.94";
-	private static final String WEATHER_OLD_CHELSEA = "http://api.openweathermap.org/data/2.5/weather?lat=45.45&lon=-75.77";
-	private static final String WEATHER_WAKEFIELD = "http://api.openweathermap.org/data/2.5/weather?lat=45.63&lon=-75.94";
 
 	private static ExecutorService THREAD_POOL = Executors.newFixedThreadPool(5);
 
@@ -36,15 +31,4 @@ public class GPHttpService {
 		THREAD_POOL.execute(new GPTrailRequest(BACKCOUNTRY_URL, true, handler));
 	}
 
-	public static void getGatineauWeather(final IGPWeatherResponseHandler handler) {
-		THREAD_POOL.execute(new GPWeatherRequest(WEATHER_GATINEAU, true, handler));
-	}
-
-	public static void getChelseaWeather(final IGPWeatherResponseHandler handler) {
-		THREAD_POOL.execute(new GPWeatherRequest(WEATHER_OLD_CHELSEA, true, handler));
-	}
-
-	public static void getWakefieldWeather(final IGPWeatherResponseHandler handler) {
-		THREAD_POOL.execute(new GPWeatherRequest(WEATHER_WAKEFIELD, true, handler));
-	}
 }
