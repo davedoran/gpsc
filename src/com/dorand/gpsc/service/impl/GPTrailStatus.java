@@ -25,8 +25,8 @@ public class GPTrailStatus implements IGPTrailStatus {
 					groomed = null;
 					distance = ((Number) ((JSONObject) contentArray.get(2)).get(GPJSON.V)).toString();
 				} else if (contentArray.size() == 4) {
-					groomed = (String) ((JSONObject) contentArray.get(2)).get(GPJSON.F);
-					distance = ((Number) ((JSONObject) contentArray.get(3)).get(GPJSON.V)).toString();
+					groomed = ((JSONObject) contentArray.get(2)).get(GPJSON.F).toString();
+					distance = ((JSONObject) contentArray.get(3)).get(GPJSON.V).toString();
 				}
 			} catch (Exception e) {
 				groomed = null;
@@ -48,7 +48,7 @@ public class GPTrailStatus implements IGPTrailStatus {
 		String name = null;
 		JSONObject jo = (JSONObject) contentArray.get(1);
 		if (jo != null && jo.containsKey(GPJSON.V)) {
-			name = (String) jo.get(GPJSON.V);
+			name = jo.get(GPJSON.V).toString();
 		} else {
 			name = "Unknown...";
 		}
@@ -59,7 +59,7 @@ public class GPTrailStatus implements IGPTrailStatus {
 		EGPTrailStatus status = EGPTrailStatus.CLEAR;
 		JSONObject jo = (JSONObject) contentArray.get(0);
 		if (jo != null && jo.containsKey(GPJSON.V)) {
-			String statusStr = (String) jo.get(GPJSON.V);
+			String statusStr = jo.get(GPJSON.V).toString();
 			if (statusStr.equals(GPJSON.OPEN)) {
 				status = EGPTrailStatus.GREEN;
 			} else if (statusStr.equals(GPJSON.CLOSED)) {

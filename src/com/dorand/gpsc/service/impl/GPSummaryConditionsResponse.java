@@ -38,10 +38,10 @@ public class GPSummaryConditionsResponse implements IGPSummaryResponse {
 		String value = null;
 		if (jsonArray != null && jsonArray.size() == 2) {
 			JSONObject key = (JSONObject) jsonArray.get(0);
-			name = (String) key.get(GPJSON.LABEL);
+			name = key.get(GPJSON.LABEL).toString();
 
 			JSONObject val = (JSONObject) jsonArray.get(1);
-			value = (String) val.get(GPJSON.LABEL);
+			value = val.get(GPJSON.LABEL).toString();
 		}
 
 		if (name != null && value != null) {
@@ -57,14 +57,25 @@ public class GPSummaryConditionsResponse implements IGPSummaryResponse {
 					JSONArray ja = (JSONArray) jo.get(GPJSON.C);
 					if (ja != null && ja.size() == 2) {
 						JSONObject key = (JSONObject) ja.get(0);
-						String name = (String) key.get(GPJSON.V);
+						String name = key.get(GPJSON.V).toString();
 
-						JSONObject val = (JSONObject) ja.get(1);
-						String value = (String) val.get(GPJSON.V);
+						try {
+							JSONObject val = (JSONObject) ja.get(1);
+							Object vl = val.get(GPJSON.V);
+							String value = null;
+							if ( vl instanceof Double ) {
+								value = vl.toString();
+							} else if ( vl instanceof String ) {
+								value = (String) vl;
+							}
 
-						if (name != null && value != null) {
-							ret.add(new GPSummaryEntry(name.trim(), value.trim()));
+							if (name != null && value != null) {
+								ret.add(new GPSummaryEntry(name.trim(), value.trim()));
+							}
+						} catch (Exception e) {
+							
 						}
+						
 					}
 				}
 			}
